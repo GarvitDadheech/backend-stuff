@@ -1,6 +1,6 @@
 const protobuf = require('protobufjs');
 
-protobuf.load('a.proto')
+protobuf.load('./src/a.proto')
   .then(root => {
     const Person = root.lookupType('Person');
 
