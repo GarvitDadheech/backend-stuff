@@ -16,6 +16,7 @@ describe("Tests for the sum endpoint", () => {
             type: 'ADD',
             ans: 3,
         })
+        vi.spyOn(db.function, 'create');
         const res = await request(app).post("/sum").send({
             a: 1,
             b: 2
@@ -23,6 +24,17 @@ describe("Tests for the sum endpoint", () => {
         expect(res.statusCode).toBe(200);
         expect(res.body.id).toBe(1);
         expect(res.body.answer).toBe(3);
+    });
+    
+    expect(db.function.create).toHaveBeenCalledWith({
+        data: {
+            id: expect.any(Number),
+            name: 'sum',
+            a: 1,
+            b: 2,
+            type: 'ADD',
+            ans: 3
+        }
     });
 
     it("should return the sum of two negative numbers", async () => {
