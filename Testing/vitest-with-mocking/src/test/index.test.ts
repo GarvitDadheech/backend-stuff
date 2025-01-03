@@ -2,15 +2,7 @@ import {it, describe, expect, vi } from 'vitest';
 import app from '../index';
 import request from 'supertest';
 
-vi.mock('../db', () => {
-    return {
-        db: {
-            function : {
-                create : vi.fn()
-            }
-        }
-    };
-});
+vi.mock('../db');
 
 describe("Tests for the sum endpoint", () => {
     it("should return the sum of two numbers", async () => {

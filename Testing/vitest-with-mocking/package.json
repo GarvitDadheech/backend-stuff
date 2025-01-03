@@ -17,5 +17,8 @@
     "prisma": "^6.1.0",
     "supertest": "^7.0.0",
     "vitest": "^2.1.8"
+  },
+  "devDependencies": {
+    "vitest-mock-extended": "^2.0.2"
   }
 }
