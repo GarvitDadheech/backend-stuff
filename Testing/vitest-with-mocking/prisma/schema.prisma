@@ -14,7 +14,7 @@ datasource db {
 }
 
 model Function {
-  id   String @id @default(cuid())
+  id   Int @id
   name String
   a    Int
   b    Int

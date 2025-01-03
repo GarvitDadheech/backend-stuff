@@ -8,8 +8,9 @@ app.post('/sum', async (req, res) => {
     const b = req.body.b;
     const answer = a + b;
 
-    await db.function.create({
+    const response = await db.function.create({
         data: {
+            id: Math.floor(Math.random() * 1000),
             name: 'sum',
             a,
             b,
@@ -19,7 +20,8 @@ app.post('/sum', async (req, res) => {
     });
 
     res.json({
-        answer
+        answer,
+        id : response.id,
     });
 });
 
@@ -30,6 +32,7 @@ app.post('/multiply', async (req, res) => {
 
     await db.function.create({
         data: {
+            id: Math.floor(Math.random() * 1000),
             name: 'multiply',
             a,
             b,

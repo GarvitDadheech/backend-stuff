@@ -1,16 +1,27 @@
 import {it, describe, expect, vi } from 'vitest';
 import app from '../index';
 import request from 'supertest';
+import { db } from '../__mocks__/db';
 
 vi.mock('../db');
 
 describe("Tests for the sum endpoint", () => {
     it("should return the sum of two numbers", async () => {
+        db.function.create.mockResolvedValue({
+            id: 1,
+            name: 'sum',
+            a:
+             1,
+            b: 2,
+            type: 'ADD',
+            ans: 3,
+        })
         const res = await request(app).post("/sum").send({
             a: 1,
             b: 2
         });
         expect(res.statusCode).toBe(200);
+        expect(res.body.id).toBe(1);
         expect(res.body.answer).toBe(3);
     });
 
