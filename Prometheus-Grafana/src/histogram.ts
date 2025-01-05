@@ -1,31 +1,36 @@
 import express, { NextFunction, Request, Response } from "express";
-import { Gauge } from "prom-client";
+import { Histogram } from "prom-client";
 import client from "prom-client";
 
 const app = express();
 app.use(express.json());
 
-const activeUsers = new Gauge({
-  name: "active_users",
-  help: "Number of active users",
+const histogram = new Histogram({
+  name: "http_request_duration_ms",
+  help: "Duration of HTTP requests in ms",
+  labelNames: ["method", "route", "code"],
+  buckets: [0.1, 5, 15, 50, 100, 300, 500, 1000, 3000, 5000],
 });
 
-const activeUserMiddleware = (
+export const durationMiddleware = (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  activeUsers.inc();
-  res.on("finish", () => {
-    activeUsers.dec();
+  const startTime = Date.now();
+
+  res.on("finish", function () {
+    const endTime = Date.now();
+    const duration = endTime - startTime;
+
+    histogram.observe({}, duration);
   });
   next();
 };
 
-app.use(activeUserMiddleware);
+app.use(durationMiddleware);
 
 app.get("/info", async (req, res) => {
-  await new Promise((resolve) => setTimeout(resolve, 5000));
   res.status(200).send({
     name: "Garvit",
     age: 20,
@@ -33,7 +38,6 @@ app.get("/info", async (req, res) => {
 });
 
 app.get("/todos", async (req, res) => {
-  await new Promise((resolve) => setTimeout(resolve, 5000));
   res.status(200).send([
     {
       id: 1,
